@@ -1,18 +1,14 @@
-<script setup lang="ts">
-import { useMouse, useCounter, useStorage } from '@vueuse/core'
-const {x, y} = useMouse()
-const {count, inc, dec} = useCounter()
-const name = useStorage("name", "")
+<template>
+  <div id="app">
+    <!-- 显示当前路由对应的组件 -->
+    <router-view></router-view>
+  </div>
+</template>
 
+<script lang="ts" setup>
+// 这里可以添加全局逻辑
 </script>
 
-<template>
-  <h3>X: {{x}}</h3>
-  <h3>Y: {{y}}</h3>
-
-  <h3>{{count}}</h3>
-  <input type="button" @click="inc()" value="+">
-  <input type="button" @click="dec()" value="-">
-
-  <input type="text" v-model="name">
-</template>
+<style scoped>
+/* 这里可以添加全局样式 */
+</style>
