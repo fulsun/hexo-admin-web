@@ -16,7 +16,7 @@ export default defineConfig({
     // 代理解决跨域问题
     proxy: {
       '/api': {
-        target: 'http://localhost:9527',
+        target: 'http://localhost:8080',
         changeOrigin: true,
         // rewrite: (path: string) => path.replace(/^\/api/, '')
       }

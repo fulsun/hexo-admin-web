@@ -46,10 +46,11 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { message } from 'ant-design-vue';
-import { login } from '../store/user';
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
+import { useUserStore } from '@/store/user';
 
 const router = useRouter();
+const userStore = useUserStore();
 
 const formData = ref({
   username: '',
@@ -71,13 +72,14 @@ const rules = {
 
 const handleLogin = async (values: any) => {
   try {
-    // 模拟登录成功
-    await login();
+    await userStore.login({
+      username: values.username,
+      password: values.password
+    });
     message.success('登录成功');
     router.push('/');
   } catch (error) {
-    console.error('登录失败:', error);
-    message.error('登录失败，请检查用户名和密码');
+    message.error('登录失败');
   }
 };
 </script>
