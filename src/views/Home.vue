@@ -31,22 +31,19 @@
     <a-layout>
       <!-- 头部 -->
       <a-layout-header class="header">
-        <a-icon
-          :component="collapsed ? MenuUnfoldOutlined : MenuFoldOutlined"
-          @click="toggle"
-          class="trigger"
-        />
+        <a-icon :component="collapsed ? MenuUnfoldOutlined : MenuFoldOutlined" @click="toggle" class="trigger" />
         <div class="header-right">
           <a-dropdown>
             <a class="user-dropdown">
-              管理员 <DownOutlined />
+              {{ username }}
+              <DownOutlined />
             </a>
             <template #overlay>
               <a-menu>
                 <a-menu-item key="0">
                   <UserOutlined /> 个人信息
                 </a-menu-item>
-                <a-menu-item key="1">
+                <a-menu-item key="1" @click="handleLogout">
                   <LogoutOutlined /> 退出登录
                 </a-menu-item>
               </a-menu>
@@ -81,9 +78,12 @@ import {
   DownOutlined,
   LogoutOutlined
 } from '@ant-design/icons-vue';
+import { useUserStore } from '@/store/user';
 
 const router = useRouter();
 const collapsed = ref(false);
+const userStore = useUserStore();
+const username = userStore.userInfo?.username ?? '';
 
 const toggle = () => {
   collapsed.value = !collapsed.value;
@@ -96,6 +96,13 @@ const onCollapse = (isCollapsed: boolean) => {
 const onMenuSelect = ({ key }: { key: string }) => {
   console.log('选中菜单项:', key);
   // 这里可以根据key进行路由跳转
+};
+
+const handleLogout = () => {
+  // 清除用户信息
+  userStore.logout();
+  // 跳转到登录页面
+  router.push('/login');
 };
 </script>
 
