@@ -35,7 +35,7 @@
         <div class="header-right">
           <a-dropdown>
             <a class="user-dropdown">
-              {{ username }}
+              {{ userInfo?.nickName ?? '' }}
               <DownOutlined />
             </a>
             <template #overlay>
@@ -78,12 +78,14 @@ import {
   DownOutlined,
   LogoutOutlined
 } from '@ant-design/icons-vue';
+
 import { useUserStore } from '@/store/user';
 
 const router = useRouter();
 const collapsed = ref(false);
 const userStore = useUserStore();
-const username = userStore.userInfo?.username ?? '';
+const userInfo = userStore.userInfo;
+
 
 const toggle = () => {
   collapsed.value = !collapsed.value;
@@ -215,3 +217,4 @@ const handleLogout = () => {
   background-color: rgba(24, 144, 255, 0.1) !important;
 }
 </style>
+
