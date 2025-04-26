@@ -6,8 +6,7 @@
           <img src="@/assets/logo.png" alt="Logo" />
           <h1>后台管理系统</h1>
         </div>
-        <a-form :model="formData" name="loginForm" @finish="handleLogin"
-          class="login-form" :rules="rules">
+        <a-form :model="formData" name="loginForm" @finish="handleLogin" class="login-form" :rules="rules">
           <a-form-item name="telephone">
             <a-input v-model:value="formData.telephone">
               <template #prefix>
@@ -65,7 +64,7 @@ const rules = {
   ],
   password: [
     { required: true, message: '请输入密码', trigger: 'blur' },
-    { min:5, message: '密码长度不能小于5位', trigger: 'blur' }
+    { min: 5, message: '密码长度不能小于5位', trigger: 'blur' }
   ]
 };
 
@@ -77,8 +76,14 @@ const handleLogin = async (values: any) => {
     });
     message.success('登录成功');
     router.push('/');
-  } catch (error) {
-    message.error('登录失败');
+  } catch (error: any) {
+    // 直接使用 error 作为响应对象
+    if (error && error.data && error.data.success === false) {
+      const {  message: errorMessage } = error.data;
+        message.error(errorMessage || '登录失败，请稍后重试');
+    } else {
+      message.error('登录失败，请联系管理员');
+    }
   }
 };
 </script>
