@@ -1,13 +1,12 @@
 <template>
-  <a-layout class="login-layout">
-    <a-layout-content class="login-content">
-      <div class="login-box">
-        <div class="login-logo">
+  <a-layout class="register-layout">
+    <a-layout-content class="register-content">
+      <div class="register-box">
+        <div class="register-logo">
           <img src="@/assets/logo.png" alt="Logo" />
-          <h1>后台管理系统</h1>
+          <h1>后台管理系统 - 注册</h1>
         </div>
-        <a-form :model="formData" name="loginForm" @finish="handleLogin"
-          class="login-form" :rules="rules">
+        <a-form :model="formData" name="registerForm" @finish="handleRegister" class="register-form" :rules="rules">
           <a-form-item name="telephone">
             <a-input v-model:value="formData.telephone">
               <template #prefix>
@@ -24,16 +23,20 @@
               <template #placeholder>请输入密码</template>
             </a-input-password>
           </a-form-item>
-          <a-form-item name="remember">
-            <a-checkbox v-model:checked="formData.remember">记住我</a-checkbox>
-            <a style="float: right" href="#">忘记密码?</a>
+          <a-form-item name="confirmPassword">
+            <a-input-password v-model:value="formData.confirmPassword">
+              <template #prefix>
+                <LockOutlined />
+              </template>
+              <template #placeholder>请再次输入密码</template>
+            </a-input-password>
           </a-form-item>
           <a-form-item>
-            <a-button type="primary" html-type="submit" block class="login-button">
-              登录
+            <a-button type="primary" html-type="submit" block class="register-button">
+              注册
             </a-button>
-            <p class="register-tip">
-              还没有账号? <router-link to="/register">立即注册</router-link>
+            <p class="login-tip">
+              已有账号? <a href="" @click.prevent="goToLogin">立即登录</a>
             </p>
           </a-form-item>
         </a-form>
@@ -55,7 +58,7 @@ const userStore = useUserStore();
 const formData = ref({
   telephone: '',
   password: '',
-  remember: true
+  confirmPassword: ''
 });
 
 const rules = {
@@ -65,27 +68,55 @@ const rules = {
   ],
   password: [
     { required: true, message: '请输入密码', trigger: 'blur' },
-    { min:5, message: '密码长度不能小于5位', trigger: 'blur' }
+    { min: 5, message: '密码长度不能小于5位', trigger: 'blur' }
+  ],
+  confirmPassword: [
+    { required: true, message: '请再次输入密码', trigger: 'blur' },
+    {
+      validator: (_: unknown, value: string) => {
+        if (!value || formData.value.password === value) {
+          return Promise.resolve();
+        }
+        return Promise.reject(new Error('两次输入的密码不一致'));
+      },
+      trigger: 'blur'
+    }
   ]
 };
 
-const handleLogin = async (values: any) => {
+const handleRegister = async (values: any) => {
   try {
-    await userStore.login({
+    // 由于 result 变量声明后未使用，直接调用 userStore.register 方法
+    await userStore.register({
       telephone: values.telephone,
       password: values.password
     });
-    message.success('登录成功');
-    router.push('/');
-  } catch (error) {
-    message.error('登录失败');
+    message.success('注册成功，请登录');
+    router.push('/login');
+  } catch (error: any) {
+    // 直接使用 error 作为响应对象
+    if (error && error.data && error.data.success === false) {
+      const { code, message: errorMessage } = error.data;
+      switch (code) {
+        case 'USER_EXIST':
+          message.error('用户已存在，请直接登录或使用其他手机号注册');
+          break;
+        default:
+          message.error(errorMessage || '注册失败，请稍后重试');
+      }
+    } else {
+      message.error('注册失败，请稍后重试');
+    }
   }
+};
+
+const goToLogin = () => {
+  router.push('/login');
 };
 </script>
 
 <style scoped>
-.login-layout {
-  /* 使用柔和的背景渐变 */
+.register-layout {
   background: linear-gradient(135deg, #e0f7fa, #b2ebf2);
   height: 100vh;
   display: flex;
@@ -93,7 +124,7 @@ const handleLogin = async (values: any) => {
   align-items: center;
 }
 
-.login-content {
+.register-content {
   width: 100%;
   display: flex;
   justify-content: center;
@@ -101,55 +132,53 @@ const handleLogin = async (values: any) => {
   padding: 20px;
 }
 
-.login-box {
+.register-box {
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   padding: 40px;
   width: 400px;
   margin: 0 auto;
-  /* 增加过渡效果，使交互更柔和 */
   transition: all 0.3s ease;
 }
 
-.login-box:hover {
+.register-box:hover {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
-.login-logo {
+.register-logo {
   text-align: center;
   margin-bottom: 30px;
 }
 
-.login-logo img {
+.register-logo img {
   width: 80px;
   height: 80px;
   margin-bottom: 10px;
 }
 
-.login-logo h1 {
+.register-logo h1 {
   font-size: 24px;
   color: #333;
 }
 
-.login-form {
+.register-form {
   width: 100%;
 }
 
-.login-button {
+.register-button {
   margin-top: 20px;
-  /* 按钮使用柔和的颜色 */
   background-color: #26c6da;
   border-color: #26c6da;
   transition: background-color 0.3s ease;
 }
 
-.login-button:hover {
+.register-button:hover {
   background-color: #00acc1;
   border-color: #00acc1;
 }
 
-.register-tip {
+.login-tip {
   text-align: center;
   margin-top: 15px;
 }

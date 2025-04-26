@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 import { useUserStore } from '@/store/user';
+import Register from '@/views/Register.vue';
 
 const routes = [
   {
@@ -10,6 +11,11 @@ const routes = [
     path: '/',
     component: () => import('@/views/Home.vue'),
     meta: { requiresAuth: true } // 需要登录才能访问
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: Register
   }
 ];
 

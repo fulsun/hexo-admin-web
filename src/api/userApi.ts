@@ -1,35 +1,20 @@
 import request from '@/utils/request';
 
 export interface LoginParams {
-  username: string;
+  telephone: string;
   password: string;
 }
 
-export interface LoginResult {
-  token: string;
-  userInfo: {
-    id: number;
-    username: string;
-    nickname: string;
-    avatar?: string;
-  };
-}
-
 export const login = (data: LoginParams) => {
-  return request.post('/login', data);
+  return request.post('/auth/login', data);
 };
 
-export const logout = () => {
-  return request.post('/logout');
-};
-
-export const getUserInfo = () => {
-  return request.get('/user/info');
+export const register = (data: LoginParams) => {
+  return request.post('/user/register',data);
 }; 
 
 const userApi = {
   login,
-  logout,
-  getUserInfo, 
+  register,
 }
 export default userApi;

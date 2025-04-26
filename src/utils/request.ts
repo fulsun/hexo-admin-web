@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { message } from 'ant-design-vue';
 
 // 创建 axios 实例
 const service = axios.create({
@@ -35,7 +34,7 @@ service.interceptors.response.use(
       // 处理成功响应
       return data;
     }
-    return Promise.reject(new Error(data.message || '请求失败'));
+    return Promise.reject(response);
   },
   (error) => {
     return Promise.reject(error);
