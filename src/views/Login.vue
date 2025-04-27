@@ -72,7 +72,8 @@ const handleLogin = async (values: any) => {
   try {
     await userStore.login({
       telephone: values.telephone,
-      password: values.password
+      password: values.password,
+      remember: values.remember
     });
     message.success('登录成功');
     router.push('/');

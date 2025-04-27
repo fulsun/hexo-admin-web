@@ -3,6 +3,7 @@ import request from '@/utils/request';
 export interface LoginParams {
   telephone: string;
   password: string;
+  remember: boolean;
 }
 
 export const login = (data: LoginParams) => {

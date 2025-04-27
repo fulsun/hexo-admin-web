@@ -5,7 +5,7 @@ import { login as loginApi, register as registerApi, logout as logoutApi, type L
 export const useUserStore = defineStore('user', () => {
   const token = ref<string | null>(localStorage.getItem('token'));
   // 添加用户信息状态
-  const userInfo = ref<any>(null); 
+  const userInfo = ref<any>(null);
 
 
   const login = async (loginParams: LoginParams) => {
@@ -15,8 +15,7 @@ export const useUserStore = defineStore('user', () => {
       const data = result.data;
       token.value = data.token;
       localStorage.setItem('token', data.token);
-      // 存储用户信息
-      userInfo.value = data; 
+      userInfo.value = data;
       return result;
     } catch (error) {
       // 处理错误
@@ -50,4 +49,6 @@ export const useUserStore = defineStore('user', () => {
     register,
     logout
   };
+}, {
+  persist: true // 启用持久化
 });

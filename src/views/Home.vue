@@ -67,7 +67,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref} from 'vue';
 import { useRouter } from 'vue-router';
 import {
   DashboardOutlined,
@@ -80,12 +80,10 @@ import {
 } from '@ant-design/icons-vue';
 
 import { useUserStore } from '@/store/user';
-
 const router = useRouter();
 const collapsed = ref(false);
 const userStore = useUserStore();
-const userInfo = userStore.userInfo;
-
+const userInfo = ref(userStore.userInfo);
 
 const toggle = () => {
   collapsed.value = !collapsed.value;
@@ -103,6 +101,8 @@ const onMenuSelect = ({ key }: { key: string }) => {
 const handleLogout = () => {
   // 清除用户信息
   userStore.logout();
+  // 清除本地存储
+  localStorage.removeItem('userInfo');
   // 跳转到登录页面
   router.push('/login');
 };
@@ -217,4 +217,3 @@ const handleLogout = () => {
   background-color: rgba(24, 144, 255, 0.1) !important;
 }
 </style>
-
